@@ -10,7 +10,10 @@ import ua.com.numberfacts.data.db.entity.NumberFactEntity
 interface NumberFactDao {
 
     @Query("SELECT * FROM number_fact")
-    fun getAllCategories(): Flow<List<NumberFactEntity>>
+    fun getAll(): Flow<List<NumberFactEntity>>
+
+    @Query("SELECT * FROM number_fact WHERE id=:id")
+    fun get(id: String): Flow<NumberFactEntity>
 
     @Upsert
     suspend fun upsert(numberFact: NumberFactEntity)

@@ -3,6 +3,6 @@ package ua.com.numberfacts.domain
 import java.math.BigInteger
 
 data class NumberFact(
-    val number: BigInteger,
-    val description: String
+    val number: BigInteger = BigInteger.ZERO,
+    val description: String = ""
 )

@@ -1,9 +1,10 @@
 package ua.com.numberfacts.domain
 
-import kotlinx.coroutines.flow.Flow
+import ua.com.numberfacts.utils.responses.DataError
+import ua.com.numberfacts.utils.responses.Results
 import java.math.BigInteger
 
 interface NumberRemoteSource {
-    fun get(number: BigInteger): Flow<NumberFact>
+    suspend fun get(number: BigInteger): Results<NumberFact, DataError.Network>
 
 }

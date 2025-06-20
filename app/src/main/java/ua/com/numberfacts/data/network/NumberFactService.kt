@@ -5,5 +5,5 @@ import ua.com.numberfacts.utils.responses.Results
 
 interface NumberFactService {
 
-    fun get(number: String): Results<String, DataError.Network>
+    suspend fun get(number: String): Results<String, DataError.Network>
 }
