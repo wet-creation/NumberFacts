@@ -4,4 +4,13 @@
     <string name="fact_page">Fact about %s</string>
     <string name="discover_fact">Discover fact</string>
     <string name="random_fact">Random fact</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="server_error">Cannot connect to server</string>
+    <string name="bad_request">Client bad request</string>
+    <string name="not_found">Nothing found</string>
+    <string name="unknown_error">Unexpected error</string>
+    <string name="error_title">Error!</string>
+    <string name="confirm">Confirm</string>
+    <string name="try_again">Try again</string>
+
 </resources>

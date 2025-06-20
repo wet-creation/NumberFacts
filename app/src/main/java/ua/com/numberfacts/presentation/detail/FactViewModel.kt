@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ua.com.numberfacts.domain.NumberFactsRepository
+import ua.com.numberfacts.utils.asUiText
 import ua.com.numberfacts.utils.emptyUiText
 import ua.com.numberfacts.utils.responses.Results
 
@@ -33,13 +34,26 @@ class FactViewModel(
             initialValue = FactState(error = emptyUiText)
         )
 
+    fun onAction(action: FactAction) {
+        when (action) {
+            FactAction.DismissError -> {
+                _state.update { it.copy(error = emptyUiText) }
+
+            }
+
+            FactAction.TryAgain -> {
+                _state.update { it.copy(error = emptyUiText) }
+                init()
+            }
+        }
+    }
+
     private fun init() {
         _state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             when (val res = repository.fetch(number)) {
                 is Results.Error -> {
-//                    _state.update { it.copy(error = res.asErrorUiText()) }
-
+                    _state.update { it.copy(error = res.error.asUiText()) }
                 }
 
                 is Results.Success -> {
