@@ -1,8 +1,6 @@
 package ua.com.numberfacts.domain
 
-import java.math.BigInteger
-
 data class NumberFact(
-    val number: BigInteger = BigInteger.ZERO,
+    val number: String = "0",
     val description: String = ""
 )

@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import ua.com.numberfacts.domain.NumberFactsRepository
 import ua.com.numberfacts.utils.emptyUiText
 import ua.com.numberfacts.utils.responses.Results
-import java.math.BigInteger
 
 class FactViewModel(
     private val number: String,
@@ -37,7 +36,7 @@ class FactViewModel(
     private fun init() {
         _state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            when (val res = repository.fetch(BigInteger(number))) {
+            when (val res = repository.fetch(number)) {
                 is Results.Error -> {
 //                    _state.update { it.copy(error = res.asErrorUiText()) }
 
@@ -55,7 +54,7 @@ class FactViewModel(
 
     private fun get() {
         viewModelScope.launch {
-            repository.get(BigInteger(number)).collect { res ->
+            repository.get(number).collect { res ->
                 _state.update {
                     it.copy(
                         isLoading = false,

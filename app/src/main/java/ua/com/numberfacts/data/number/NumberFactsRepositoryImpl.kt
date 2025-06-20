@@ -4,21 +4,20 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import ua.com.numberfacts.domain.NumberFact
+import ua.com.numberfacts.domain.NumberFactsRepository
 import ua.com.numberfacts.domain.NumberLocalSource
 import ua.com.numberfacts.domain.NumberRemoteSource
-import ua.com.numberfacts.domain.NumberFactsRepository
 import ua.com.numberfacts.utils.responses.DataError
 import ua.com.numberfacts.utils.responses.EmptyDataResult
 import ua.com.numberfacts.utils.responses.Results
 import ua.com.numberfacts.utils.responses.asEmptyDataResult
-import java.math.BigInteger
 
 class NumberFactsRepositoryImpl(
     private val localSource: NumberLocalSource,
     private val remoteSource: NumberRemoteSource,
     private val applicationScope: CoroutineScope
 ) : NumberFactsRepository {
-    override fun get(number: BigInteger): Flow<NumberFact?> {
+    override fun get(number: String): Flow<NumberFact?> {
        return localSource.get(number)
     }
 
@@ -26,7 +25,7 @@ class NumberFactsRepositoryImpl(
         return localSource.getAll()
     }
 
-    override suspend fun fetch(number: BigInteger): EmptyDataResult<DataError.Network> {
+    override suspend fun fetch(number: String): EmptyDataResult<DataError.Network> {
         when (val res = remoteSource.get(number)) {
             is Results.Error -> return res.asEmptyDataResult()
             is Results.Success -> {

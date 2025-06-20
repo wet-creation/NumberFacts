@@ -6,12 +6,11 @@ import ua.com.numberfacts.data.db.NumberFactDao
 import ua.com.numberfacts.data.db.entity.NumberFactEntity
 import ua.com.numberfacts.domain.NumberFact
 import ua.com.numberfacts.domain.NumberLocalSource
-import java.math.BigInteger
 
 class NumberLocalSourceImpl(
     private val dao: NumberFactDao
 ) : NumberLocalSource {
-    override fun get(number: BigInteger): Flow<NumberFact?> {
+    override fun get(number: String): Flow<NumberFact?> {
         return dao.get(number.toString())
             .map { it?.toNumberFact() }
     }
@@ -27,11 +26,11 @@ class NumberLocalSourceImpl(
 }
 
 fun NumberFactEntity.toNumberFact() = NumberFact(
-    number = BigInteger(number),
+    number = number,
     description = description
 )
 
 fun NumberFact.toNumberFactEntity() = NumberFactEntity(
-    number = number.toString(),
+    number = number,
     description = description
 )
