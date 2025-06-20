@@ -11,9 +11,9 @@ import java.math.BigInteger
 class NumberLocalSourceImpl(
     private val dao: NumberFactDao
 ) : NumberLocalSource {
-    override fun get(number: BigInteger): Flow<NumberFact> {
+    override fun get(number: BigInteger): Flow<NumberFact?> {
         return dao.get(number.toString())
-            .map { it.toNumberFact() }
+            .map { it?.toNumberFact() }
     }
 
     override fun getAll(): Flow<List<NumberFact>> {

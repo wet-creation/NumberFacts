@@ -12,7 +12,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import ua.com.numberfacts.R
+import ua.com.numberfacts.presentation.detail.FactRoot
+import ua.com.numberfacts.presentation.detail.FactViewModel
 import ua.com.numberfacts.presentation.home.HomeRoot
 import kotlin.reflect.KClass
 
@@ -38,7 +42,9 @@ fun NavigationRoot(
         composable<Fact> {
             val number = it.toRoute<Fact>().number
             topBarName(stringResource(R.string.fact_page, number))
-
+            val viewModel =
+                koinViewModel<FactViewModel>(parameters = { parametersOf(number) })
+            FactRoot(viewModel = viewModel)
         }
 
     }

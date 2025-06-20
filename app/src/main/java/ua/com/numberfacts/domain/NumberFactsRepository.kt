@@ -7,7 +7,7 @@ import java.math.BigInteger
 
 interface NumberFactsRepository {
 
-    fun get(number: BigInteger): Flow<NumberFact>
+    fun get(number: BigInteger): Flow<NumberFact?>
     fun getHistory(): Flow<List<NumberFact>>
     suspend fun fetch(number: BigInteger): EmptyDataResult<DataError.Network>
 }

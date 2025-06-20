@@ -13,7 +13,7 @@ interface NumberFactDao {
     fun getAll(): Flow<List<NumberFactEntity>>
 
     @Query("SELECT * FROM number_fact WHERE id=:id")
-    fun get(id: String): Flow<NumberFactEntity>
+    fun get(id: String): Flow<NumberFactEntity?>
 
     @Upsert
     suspend fun upsert(numberFact: NumberFactEntity)

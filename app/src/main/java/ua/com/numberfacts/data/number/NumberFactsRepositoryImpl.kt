@@ -18,7 +18,7 @@ class NumberFactsRepositoryImpl(
     private val remoteSource: NumberRemoteSource,
     private val applicationScope: CoroutineScope
 ) : NumberFactsRepository {
-    override fun get(number: BigInteger): Flow<NumberFact> {
+    override fun get(number: BigInteger): Flow<NumberFact?> {
        return localSource.get(number)
     }
 

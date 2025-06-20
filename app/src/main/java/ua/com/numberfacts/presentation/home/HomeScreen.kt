@@ -107,13 +107,16 @@ fun HomeScreen(
                 .weight(1f)
         ) {
             itemsIndexed(state.history, key = { index, item -> index }) { index, item ->
+                if (index != 0)
+                    HorizontalDivider()
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.clickable {
-                        onAction(HomeAction.NavigateToFact(item.number.toString()))
-                    }) {
-                    if (index != 0)
-                        HorizontalDivider()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onAction(HomeAction.NavigateToFact(item.number.toString()))
+                        }) {
+
 
                     Text(item.number.toString())
                     Text(

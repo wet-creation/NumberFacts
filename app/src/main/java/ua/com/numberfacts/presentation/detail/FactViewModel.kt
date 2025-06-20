@@ -1,4 +1,4 @@
-package ua.com.numberfacts.presentation.home
+package ua.com.numberfacts.presentation.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,14 +9,18 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ua.com.numberfacts.domain.NumberFactsRepository
+import ua.com.numberfacts.utils.emptyUiText
+import ua.com.numberfacts.utils.responses.Results
+import java.math.BigInteger
 
-class HomeViewModel(
+class FactViewModel(
+    private val number: String,
     private val repository: NumberFactsRepository
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
 
-    private val _state = MutableStateFlow(HomeState(isLoading = true))
+    private val _state = MutableStateFlow(FactState(error = emptyUiText))
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
@@ -27,35 +31,38 @@ class HomeViewModel(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
-            initialValue = HomeState(isLoading = true)
+            initialValue = FactState(error = emptyUiText)
         )
-
-    fun onAction(action: HomeAction) {
-        when (action) {
-            is HomeAction.EnterNumber -> {
-                _state.update {
-                    it.copy(
-                        numberValue = action.value
-                    )
-                }
-            }
-
-            else -> Unit
-        }
-    }
 
     private fun init() {
         _state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            repository.getHistory().collect { res ->
+            when (val res = repository.fetch(BigInteger(number))) {
+                is Results.Error -> {
+//                    _state.update { it.copy(error = res.asErrorUiText()) }
+
+                }
+
+                is Results.Success -> {
+                    _state.update { it.copy(error = emptyUiText) }
+                }
+
+            }
+            get()
+        }
+
+    }
+
+    private fun get() {
+        viewModelScope.launch {
+            repository.get(BigInteger(number)).collect { res ->
                 _state.update {
                     it.copy(
                         isLoading = false,
-                        history = res.reversed()
+                        numberFact = res
                     )
                 }
             }
         }
     }
-
 }
