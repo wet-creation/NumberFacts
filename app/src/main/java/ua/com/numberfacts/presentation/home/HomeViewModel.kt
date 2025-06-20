@@ -2,20 +2,24 @@ package ua.com.numberfacts.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ua.com.numberfacts.domain.NumberFactsRepository
+import ua.com.numberfacts.utils.responses.Results
 
 class HomeViewModel(
     private val repository: NumberFactsRepository
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
-
+    private val eventChannel = Channel<String>()
+    val events = eventChannel.receiveAsFlow()
     private val _state = MutableStateFlow(HomeState(isLoading = true))
     val state = _state
         .onStart {
@@ -37,6 +41,16 @@ class HomeViewModel(
                     it.copy(
                         numberValue = action.value
                     )
+                }
+            }
+            HomeAction.Random -> {
+                viewModelScope.launch {
+                    when(val res = repository.random()) {
+                        is Results.Error -> {}
+                        is Results.Success -> {
+                            eventChannel.send(res.data.number)
+                        }
+                    }
                 }
             }
 

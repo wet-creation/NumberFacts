@@ -36,4 +36,8 @@ class NumberFactsRepositoryImpl(
             }
         }
     }
+
+    override suspend fun random(): Results<NumberFact, DataError.Network> {
+        return remoteSource.random()
+    }
 }

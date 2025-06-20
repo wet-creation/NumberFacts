@@ -10,4 +10,8 @@ class NumberFactServiceImpl(
     override suspend fun get(number: String): Results<String, DataError.Network> {
         return httpClientFactory.getClient().get("/${number}")
     }
+
+    override suspend fun random(): Results<String, DataError.Network> {
+        return httpClientFactory.getClient().get("/random/math")
+    }
 }

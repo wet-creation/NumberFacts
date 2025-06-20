@@ -6,4 +6,5 @@ import ua.com.numberfacts.utils.responses.Results
 interface NumberFactService {
 
     suspend fun get(number: String): Results<String, DataError.Network>
+    suspend fun random(): Results<String, DataError.Network>
 }

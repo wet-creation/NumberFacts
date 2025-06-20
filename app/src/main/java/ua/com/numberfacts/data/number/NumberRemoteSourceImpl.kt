@@ -18,4 +18,13 @@ class NumberRemoteSourceImpl(
             )
         }
     }
+
+    override suspend fun random(): Results<NumberFact, DataError.Network> {
+        return service.random().map {
+            NumberFact(
+                number = it?.substringBefore(' ') ?: "",
+                description = it ?: ""
+            )
+        }
+    }
 }

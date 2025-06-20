@@ -5,5 +5,6 @@ import ua.com.numberfacts.utils.responses.Results
 
 interface NumberRemoteSource {
     suspend fun get(number: String): Results<NumberFact, DataError.Network>
+    suspend fun random(): Results<NumberFact, DataError.Network>
 
 }

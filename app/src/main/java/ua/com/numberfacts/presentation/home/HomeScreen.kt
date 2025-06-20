@@ -1,6 +1,5 @@
 package ua.com.numberfacts.presentation.home
 
-import android.provider.CalendarContract
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
@@ -38,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import ua.com.numberfacts.R
 import ua.com.numberfacts.ui.theme.NumberFactsTheme
+import ua.com.numberfacts.utils.ObserverAsEvents
 
 @Composable
 fun HomeRoot(
@@ -45,7 +44,10 @@ fun HomeRoot(
     navigateToFact: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-
+    ObserverAsEvents(viewModel.events) { event ->
+        if (event.isNotEmpty())
+            navigateToFact(event)
+    }
     HomeScreen(
         state = state,
         onAction = {
@@ -108,8 +110,8 @@ fun HomeScreen(
                 Text(stringResource(R.string.discover_fact))
             }
             Button(onClick = {
-                val rand = (Long.MIN_VALUE..Long.MAX_VALUE).random()
-                onAction(HomeAction.NavigateToFact(rand.toString()))
+
+                onAction(HomeAction.Random)
             }) {
                 Text(stringResource(R.string.random_fact))
             }
