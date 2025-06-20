@@ -11,6 +11,7 @@ import org.koin.dsl.module
 import ua.com.numberfacts.data.di.DbModule
 import ua.com.numberfacts.data.di.NetworkModule
 import ua.com.numberfacts.data.di.NumberDataModule
+import ua.com.numberfacts.presentation.di.PresentationModule
 
 val ApplicationModule = module {
     single<CoroutineScope> {
@@ -30,6 +31,7 @@ class NumberFactsApp: Application() {
                 DbModule,
                 NetworkModule,
                 NumberDataModule,
+                PresentationModule,
             )
         }
     }

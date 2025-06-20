@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">NumberFacts</string>
     <string name="home_page">Home</string>
-    <string name="fact_page">Fact about 1$s</string>
+    <string name="fact_page">Fact about %s</string>
+    <string name="discover_fact">Discover fact</string>
+    <string name="random_fact">Random fact</string>
 </resources>

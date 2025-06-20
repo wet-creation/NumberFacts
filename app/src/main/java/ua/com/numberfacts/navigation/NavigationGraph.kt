@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 import ua.com.numberfacts.R
+import ua.com.numberfacts.presentation.home.HomeRoot
 import kotlin.reflect.KClass
 
 
@@ -30,7 +31,9 @@ fun NavigationRoot(
     ) {
         composable<Home> {
             topBarName(stringResource(R.string.home_page))
-
+            HomeRoot {
+                navController.navigate(Fact(it))
+            }
         }
         composable<Fact> {
             val number = it.toRoute<Fact>().number
