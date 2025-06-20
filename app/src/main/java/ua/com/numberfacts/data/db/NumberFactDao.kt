@@ -1,8 +1,8 @@
 package ua.com.numberfacts.data.db
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import ua.com.numberfacts.data.db.entity.NumberFactEntity
 
@@ -15,7 +15,10 @@ interface NumberFactDao {
     @Query("SELECT * FROM number_fact WHERE id=:id")
     fun get(id: String): Flow<NumberFactEntity?>
 
-    @Upsert
-    suspend fun upsert(numberFact: NumberFactEntity)
+    @Query("DELETE FROM number_fact WHERE id=:id")
+    suspend fun delete(id: String)
+
+    @Insert
+    suspend fun insert(numberFact: NumberFactEntity)
 
 }

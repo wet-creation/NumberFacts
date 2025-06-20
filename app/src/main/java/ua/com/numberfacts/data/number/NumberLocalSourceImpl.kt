@@ -21,7 +21,8 @@ class NumberLocalSourceImpl(
     }
 
     override suspend fun upsert(numberFact: NumberFact) {
-        dao.upsert(numberFact.toNumberFactEntity())
+        dao.delete(numberFact.number)
+        dao.insert(numberFact.toNumberFactEntity())
     }
 }
 
