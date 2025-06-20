@@ -4,45 +4,81 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import org.koin.android.ext.android.inject
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.KoinAndroidContext
-import ua.com.numberfacts.domain.NumberFact
-import ua.com.numberfacts.domain.NumberFactsRepository
+import ua.com.numberfacts.navigation.Home
+import ua.com.numberfacts.navigation.NavigationRoot
+import ua.com.numberfacts.navigation.routeClass
 import ua.com.numberfacts.ui.theme.NumberFactsTheme
-import java.math.BigInteger
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val repo by inject<NumberFactsRepository>()
-
         setContent {
-            KoinAndroidContext {
-                var number by remember { mutableStateOf(NumberFact()) }
-
-                LaunchedEffect(null) {
-                    repo.fetch(BigInteger("2"))
-                    repo.get(BigInteger("2")).collect {
-                        number = it
-                    }
+            val navController = rememberNavController()
+            var topBarTitle by remember {
+                mutableStateOf<String?>(null)
+            }
+            val backStack by navController.currentBackStackEntryAsState()
+            val showNavBack = remember {
+                derivedStateOf {
+                    backStack?.destination?.routeClass() != Home::class
                 }
+            }
+            KoinAndroidContext {
                 NumberFactsTheme {
-                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                        Column(modifier = Modifier.padding(innerPadding)) {
-                            Text(number.number.toString())
-                            Text(number.description)
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        topBar = {
+                            topBarTitle?.let {
+                                CenterAlignedTopAppBar(
+                                    navigationIcon = {
+                                        if (showNavBack.value)
+                                            IconButton(
+                                                onClick = {
+                                                    navController.navigateUp()
+                                                }
+                                            ) {
+                                                Icon(
+                                                    contentDescription = null,
+                                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack
+                                                )
+                                            }
+                                    },
+                                    title = {
+                                        Text(
+                                            it,
+                                            overflow = TextOverflow.Ellipsis,
+                                            maxLines = 1
+                                        )
+                                    }
+                                )
+                            }
+                        }) { innerPadding ->
+                        NavigationRoot(
+                            navController,
+                            innerPadding
+                        ) {
+                            topBarTitle = it
                         }
                     }
                 }
